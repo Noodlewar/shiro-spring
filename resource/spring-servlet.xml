@@ -12,4 +12,12 @@
 		<property name="suffix" value=".jsp"></property>
 	</bean>
 
+	<!-- 使Shiro的注解起注解，Shiro的注解标示在方法上 -->
+	<!-- 因为目前是在Handler的方法上添加注解，所以以下的配置需要作用在SpringMVC的IoC容器中，而不是其父容器中 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+	
 </beans>

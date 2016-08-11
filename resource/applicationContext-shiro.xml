@@ -21,7 +21,7 @@
     </bean>
 
 	<!-- 配置进行授权和认证的Realm -->
-	<bean id="myRealm" class="com.ndh.shiro.realm.MyRealm"></bean>
+	<bean id="myRealm" class="com.ndh.shiro.realm.MyRealm" init-method="setCredentialsMatcher"></bean>
 
 	<!-- 配置Shiro的SecurityManager Bean. -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -32,13 +32,6 @@
 	<!-- 配置Bean后置处理器：会自动的调用和spring整合后各个组件的生命周期方法. -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
 
-	<!-- 使Shiro的注解起注解，Shiro的注解标示在方法上 -->
-	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-          depends-on="lifecycleBeanPostProcessor"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
-    
     <!-- 配置ShiroFilter Bean：该bean的id必须与 web.xml文件中配置的shiro filter的name一致-->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <!-- 装配securityManager -->
@@ -60,6 +53,8 @@
                 /*.jar = anon
                 # everything else requires authentication:
                 /** = authc -->
+                <!-- 配置登出：使用logout过滤器 -->
+                /shiro-logout = logout
                 /shiro-* = anon
                 /user.jsp = roles[user]
                 /admin.jsp = roles[admin]
